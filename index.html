@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>FiltersJs PDI</title>
+    <link rel="icon" href="img/logo.png" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Krub:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Varela+Round&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary100: "#cee8ff",
+              primary200: "#acc2ef",
+              primary300: "#4d648d",
+              primary400: "#1f2b3e",
+              primary500: "#0F1C2E",
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+      }
+    </style>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-primary500">
+    <!-- Navbar -->
+    <nav
+      class="bg-primary500 fixed w-full z-20 top-0 start-0 border-b-2 border-gray-200/[0.3]"
+    >
+      <div
+        class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+      >
+        <div class="h-10 w-10">
+          <a href="/" class="flex items-center space-x-2">
+            <p class="text-white text-lg font-semibold">VisText</p>
+            <img src="./img/logo.png" alt="logo" />
+          </a>
+        </div>
+        <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          <button
+            type="button"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Comenzar
+          </button>
+          <button
+            data-collapse-toggle="navbar-sticky"
+            type="button"
+            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            aria-controls="navbar-sticky"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Open main menu</span>
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+          id="navbar-sticky"
+        >
+          <ul
+            class="flex flex-col p-4 md:p-0 mt-4 font-medium md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0"
+          >
+            <li>
+              <a
+                href="/index.html"
+                class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                aria-current="page"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="/about.html"
+                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                >Acerca de</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Buttons -->
+    <div class="md:flex justify-center mt-24 mb-5">
+      <button
+        onclick="applyGrayScale()"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Escala Grises
+      </button>
+      <button
+        onclick="applyThreshold()"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Binarización
+      </button>
+      <div>
+        <input
+          type="range"
+          id="thresholdSlider"
+          min="0"
+          max="255"
+          value="128"
+          class="my-3 mr-2"
+        />
+      </div>
+      <button
+        onclick="applyExponentialEqualization()"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Equalizacion Exponencial
+      </button>
+      <button
+        onclick="resetFilters() "
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Resetear
+      </button>
+    </div>
+    <!--  -->
+
+    <!-- Upload File -->
+    <div class="flex justify-center mb-5">
+      <div class="w-1/2">
+        <label
+          for="upload"
+          class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-primary400 text-black hover:bg-primary500 transition-colors duration-300 ease-in-out"
+        >
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg
+              class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+              />
+            </svg>
+            <p class="mb-2 text-md text-gray-500 dark:text-gray-400">
+              <span class="font-semibold">Click to upload</span>
+            </p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              PNG, JPG or GIF
+            </p>
+          </div>
+          <input id="upload" type="file" class="hidden" accept="image/*" / />
+        </label>
+      </div>
+    </div>
+    <!--  -->
+
+    <div class="flex justify-center max-w-full overflow-hidden">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <div class="flex justify-center mt-5 max-w">
+      <div id="chart" class="bg-white w-full md:w-2/3"></div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+
+  <footer
+    class="mt-12 bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-primary500 dark:border-gray-600"
+  >
+    <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400"
+      >© 2024 Comunidad 5. Todos los derechos reservados.
+    </span>
+    <ul
+      class="flex justify-center flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0 space-x-4"
+    >
+      <li>
+        <p>Antonio</p>
+      </li>
+      <li>
+        <p>Manuel</p>
+      </li>
+      <li>
+        <p>Ilse</p>
+      </li>
+      <li>
+        <p>Alexis</p>
+      </li>
+      <li>
+        <p>Víctor</p>
+      </li>
+    </ul>
+  </footer>
+</html>
