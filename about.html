@@ -60,7 +60,7 @@
         <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <a
             href="/index.html"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            class="text-blue-700 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
             >Comenzar</a
           >
           <button
@@ -117,11 +117,18 @@
 
     <!-- Ecualizacion Exponencial -->
     <div class="mt-28">
-      <h1 class="text-center text-white font-semibold text-2xl mb-7">
-        Ecualizacion exponencial
-      </h1>
+      <div class="flex justify-center">
+        <h2
+          class="bg-blue-600 px-4 py-2 rounded-md text-center text-white font-semibold text-2xl mb-7"
+        >
+          Ecualizacion exponencial
+        </h2>
+      </div>
 
-      <h2 class="text-blue-500 text-xl">-> Ajuste de contraste <-</h2>
+      <h3 class="text-gray-100 text-xl">
+        <span class="text-blue-600">-> </span>Ajuste de contraste
+        <span class="text-blue-600"><-</span>
+      </h3>
 
       <p class="text-white mt-7 mx-8 md:mx-72">
         Esta técnica se basa en modificar los valores de intensidad de los
@@ -139,8 +146,10 @@
         >.
       </p>
 
-      <h2 class="text-blue-500 text-xl mt-7">-> Formula <-</h2>
-
+      <h3 class="text-gray-100 text-xl mt-7">
+        <span class="text-blue-600">-> </span>Formula
+        <span class="text-blue-600"><-</span>
+      </h3>
       <div class="flex justify-center mt-7">
         <img
           src="/img/formula.png"
@@ -169,8 +178,10 @@
         </li>
       </ul>
 
-      <h2 class="text-blue-500 text-xl mt-7">-> Codigo Js <-</h2>
-
+      <h3 class="text-gray-100 text-xl mt-7">
+        <span class="text-blue-600">-> </span>Codigo
+        <span class="text-blue-600"><-</span>
+      </h3>
       <div class="flex justify-center mt-7">
         <img
           src="/img/code.png"
@@ -179,12 +190,64 @@
         />
       </div>
 
-      <h2 class="text-blue-500 text-xl mt-7">-> Repositorio <-</h2>
+      <!-- Filtro de Sobel -->
+      <div class="mt-7">
+        <div class="flex justify-center">
+          <h2
+            class="bg-blue-600 px-4 py-2 rounded-md text-center text-white font-semibold text-2xl mb-7"
+          >
+            Filtro de sobel
+          </h2>
+        </div>
 
-      <div class="flex justify-center mb-24 mt-7">
+        <h3 class="text-gray-100 text-xl">
+          <span class="text-blue-600">-> </span>Deteccion de bordes
+          <span class="text-blue-600"><-</span>
+        </h3>
+
+        <p class="text-white mt-7 mx-8 md:mx-72">
+          Utiliza dos matrices convolucionales (kernels) de 3x3 para calcular
+          <span class="text-blue-600">aproximaciones</span> de las derivadas de
+          la imagen en las direcciones X e Y.
+        </p>
+
+        <h3 class="text-gray-100 text-xl mt-7">
+          <span class="text-blue-600">-> </span>kernels
+          <span class="text-blue-600"><-</span>
+        </h3>
+
+        <div class="flex justify-center mt-7">
+          <img
+            src="/img/sobel.png"
+            class="w-2/3 md:w-96 rounded-lg"
+            alt="formula"
+          />
+        </div>
+
+        <h3 class="text-gray-100 text-xl mt-7">
+          <span class="text-blue-600">-> </span>Codigo
+          <span class="text-blue-600"><-</span>
+        </h3>
+        <div class="flex justify-center mt-7">
+          <img
+            src="/img/code-sobel-2.png"
+            class="w-2/3 md:w-1/3 rounded-lg"
+            alt="codigo"
+          />
+        </div>
+        <div class="flex justify-center mt-7">
+          <img
+            src="/img/code-sobel.png"
+            class="w-full md:w-2/3 rounded-lg"
+            alt="codigo"
+          />
+        </div>
+      </div>
+
+      <div class="flex justify-center mb-24 mt-20">
         <a
           href="https://github.com/mvnueloc/FiltersJs_PDI"
-          class="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg space-x-2"
+          class="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg space-x-2"
           target="_blank"
         >
           <p>Github</p>

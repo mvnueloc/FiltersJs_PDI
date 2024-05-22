@@ -7,9 +7,17 @@ document.getElementById('upload').addEventListener('change', function(e) {
     reader.onload = function(event) {
         let img = new Image();
         img.onload = function() {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
+            // Mantener la relación de aspecto de la imagen
+            let scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+            let width = img.width * scale;
+            let height = img.height * scale;
+
+            // Ajustar el tamaño del canvas al de la imagen
+            canvas.width = width;
+            canvas.height = height;
+
+            // Dibujar la imagen en el canvas
+            ctx.drawImage(img, 0, 0, width, height);
             originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         }
         img.src = event.target.result;
@@ -22,8 +30,8 @@ img.onload = function() {
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
     originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    applyGrayScale(); // Asegúrate de convertir la imagen a escala de grises
-    generateHistogram(ctx.getImageData(0, 0, canvas.width, canvas.height)); // Genera el histograma
+    applyGrayScale(); 
+    generateHistogram(ctx.getImageData(0, 0, canvas.width, canvas.height)); 
 }
 
 function applyGrayScale() {
@@ -31,10 +39,10 @@ function applyGrayScale() {
     let data = imageData.data;
     for (let i = 0; i < data.length; i += 4) {
         let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-        data[i] = data[i + 1] = data[i + 2] = avg; // Aplica escala de grises a cada componente
+        data[i] = data[i + 1] = data[i + 2] = avg; 
     }
     ctx.putImageData(imageData, 0, 0);
-    generateHistogram(imageData); // Actualiza el histograma después de aplicar escala de grises
+    generateHistogram(imageData); 
 }
 
 function applyThreshold() {
@@ -73,7 +81,6 @@ function applyExponentialEqualization() {
     generateHistogram(imageData);
 }
 
-
 function resetFilters() {
     if (originalImageData) {
         ctx.putImageData(originalImageData, 0, 0);
@@ -85,7 +92,7 @@ function generateHistogram(imageData) {
     let data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
-        greyFrequencies[data[i]]++; // Suponemos que la imagen ya está en escala de grises y el valor de gris se encuentra en cada componente
+        greyFrequencies[data[i]]++; 
     }
 
     var options = {
@@ -94,7 +101,7 @@ function generateHistogram(imageData) {
             data: greyFrequencies
         }],
         chart: {
-            type: 'bar', // 'bar' es más adecuado para histogramas
+            type: 'bar', 
             height: 350
         },
         title: {
@@ -128,3 +135,69 @@ function generateHistogram(imageData) {
     chart.render();
 }
 
+function applySobelFilter() {
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let data = imageData.data;
+    let width = imageData.width;
+    let height = imageData.height;
+
+    // Kernels de Sobel
+
+    let sobelX = [
+        [-1, 0, 1],
+        [-2, 0, 2],
+        [-1, 0, 1]
+    ];
+
+    let sobelY = [
+        [-1, -2, -1],
+        [0, 0, 0],
+        [1, 2, 1]
+    ];
+
+    let grayscaleData = [];
+    for (let i = 0; i < data.length; i += 4) {
+        grayscaleData.push(data[i]);
+    }
+
+    let gradientData = new Uint8ClampedArray(data.length);
+
+    function getPixel(x, y) {
+        return grayscaleData[y * width + x];
+    }
+
+    for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+            let pixelX = (
+                (sobelX[0][0] * getPixel(x - 1, y - 1)) +
+                (sobelX[0][1] * getPixel(x, y - 1)) +
+                (sobelX[0][2] * getPixel(x + 1, y - 1)) +
+                (sobelX[1][0] * getPixel(x - 1, y)) +
+                (sobelX[1][2] * getPixel(x + 1, y)) +
+                (sobelX[2][0] * getPixel(x - 1, y + 1)) +
+                (sobelX[2][1] * getPixel(x, y + 1)) +
+                (sobelX[2][2] * getPixel(x + 1, y + 1))
+            );
+
+            let pixelY = (
+                (sobelY[0][0] * getPixel(x - 1, y - 1)) +
+                (sobelY[0][1] * getPixel(x, y - 1)) +
+                (sobelY[0][2] * getPixel(x + 1, y - 1)) +
+                (sobelY[1][0] * getPixel(x - 1, y)) +
+                (sobelY[1][2] * getPixel(x + 1, y)) +
+                (sobelY[2][0] * getPixel(x - 1, y + 1)) +
+                (sobelY[2][1] * getPixel(x, y + 1)) +
+                (sobelY[2][2] * getPixel(x + 1, y + 1))
+            );
+
+            let magnitude = Math.sqrt((pixelX * pixelX) + (pixelY * pixelY)) >>> 0;
+
+            let index = (y * width + x) * 4;
+            gradientData[index] = gradientData[index + 1] = gradientData[index + 2] = magnitude;
+            gradientData[index + 3] = 255; // Alpha channel
+        }
+    }
+
+    ctx.putImageData(new ImageData(gradientData, width, height), 0, 0);
+    generateHistogram(imageData);
+}

@@ -60,7 +60,7 @@
         <div class="flex lg:order-2 space-x-3 lg:space-x-0 rtl:space-x-reverse">
           <a
             href="/index.html"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            class="text-blue-700 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
             >Comenzar</a
           >
           <button
@@ -128,6 +128,7 @@
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
       >
         Binarización
+        <span id="sliderValue">128</span>
       </button>
       <div>
         <input
@@ -139,6 +140,7 @@
           class="my-3 mr-2"
         />
       </div>
+
       <button
         onclick="applyExponentialEqualization()"
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
@@ -146,12 +148,28 @@
         Equalizacion Exponencial
       </button>
       <button
-        onclick="resetFilters() "
+        onclick="applySobelFilter()"
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Sobel
+      </button>
+      <button
+        onclick="resetFilters() "
+        class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"
       >
         Resetear
       </button>
     </div>
+
+    <!-- Script umbral -->
+    <script>
+      const slider = document.getElementById("thresholdSlider");
+      const sliderValue = document.getElementById("sliderValue");
+
+      slider.addEventListener("input", function () {
+        sliderValue.textContent = slider.value;
+      });
+    </script>
     <!--  -->
 
     <!-- Upload File -->
@@ -181,7 +199,7 @@
               <span class="font-semibold">Click to upload</span>
             </p>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-              PNG, JPG or GIF
+              PNG, JPG or JPEG
             </p>
           </div>
           <input id="upload" type="file" class="hidden" accept="image/*" / />
@@ -190,8 +208,8 @@
     </div>
     <!--  -->
 
-    <div class="flex justify-center max-w-full overflow-hidden">
-      <canvas id="canvas"></canvas>
+    <div class="flex justify-center overflow-hidden mx-6">
+      <canvas id="canvas" class="w-full h-full md:w-96 md:h-96"></canvas>
     </div>
 
     <div class="flex justify-center mt-5 max-w">
