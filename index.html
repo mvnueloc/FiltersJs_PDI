@@ -154,6 +154,19 @@
         Sobel
       </button>
       <button
+        onclick="applyMedianFilter()"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      >
+        Mediana
+      </button>
+      <input
+        type="number"
+        id="windowSize"
+        value="3"
+        min="1"
+        class="border text-sm rounded-lg w-16 h-10 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 mr-2"
+      />
+      <button
         onclick="resetFilters() "
         class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800"
       >
@@ -208,8 +221,8 @@
     </div>
     <!--  -->
 
-    <div class="flex justify-center overflow-hidden mx-6">
-      <canvas id="canvas" class="w-full h-full md:w-96 md:h-96"></canvas>
+    <div class="flex justify-center">
+      <canvas id="canvas"></canvas>
     </div>
 
     <div class="flex justify-center mt-5 max-w">

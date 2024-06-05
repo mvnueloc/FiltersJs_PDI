@@ -7,17 +7,9 @@ document.getElementById('upload').addEventListener('change', function(e) {
     reader.onload = function(event) {
         let img = new Image();
         img.onload = function() {
-            // Mantener la relación de aspecto de la imagen
-            let scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-            let width = img.width * scale;
-            let height = img.height * scale;
-
-            // Ajustar el tamaño del canvas al de la imagen
-            canvas.width = width;
-            canvas.height = height;
-
-            // Dibujar la imagen en el canvas
-            ctx.drawImage(img, 0, 0, width, height);
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
             originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         }
         img.src = event.target.result;
@@ -134,6 +126,64 @@ function generateHistogram(imageData) {
     var chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
 }
+
+function applyMedianFilter() {
+    let windowSize = parseInt(document.getElementById('windowSize').value);
+    if (windowSize % 2 === 0) {
+        alert("El tamaño de la ventana debe ser un número impar.");
+        return;
+    }
+
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let data = imageData.data;
+    let width = imageData.width;
+    let height = imageData.height;
+
+    let outputData = new Uint8ClampedArray(data.length);
+    let halfWindowSize = Math.floor(windowSize / 2);
+
+    function getWindow(x, y, channel) {
+        let window = [];
+        for (let j = -halfWindowSize; j <= halfWindowSize; j++) {
+            for (let i = -halfWindowSize; i <= halfWindowSize; i++) {
+                let pixelIndex = ((y + j) * width + (x + i)) * 4;
+                if (pixelIndex >= 0 && pixelIndex < data.length) {
+                    window.push(data[pixelIndex + channel]);
+                } else {
+                    window.push(0);
+                }
+            }
+        }
+        return window;
+    }
+
+    for (let y = halfWindowSize; y < height - halfWindowSize; y++) {
+        for (let x = halfWindowSize; x < width - halfWindowSize; x++) {
+            let redWindow = getWindow(x, y, 0);
+            let greenWindow = getWindow(x, y, 1);
+            let blueWindow = getWindow(x, y, 2);
+
+            redWindow.sort((a, b) => a - b);
+            greenWindow.sort((a, b) => a - b);
+            blueWindow.sort((a, b) => a - b);
+
+            let medianRed = redWindow[Math.floor(redWindow.length / 2)];
+            let medianGreen = greenWindow[Math.floor(greenWindow.length / 2)];
+            let medianBlue = blueWindow[Math.floor(blueWindow.length / 2)];
+
+            let index = (y * width + x) * 4;
+            outputData[index] = medianRed;
+            outputData[index + 1] = medianGreen;
+            outputData[index + 2] = medianBlue;
+            outputData[index + 3] = 255; 
+        }
+    }
+
+    ctx.putImageData(new ImageData(outputData, width, height), 0, 0);
+    generateHistogram(new ImageData(outputData, width, height));
+}
+
+
 
 function applySobelFilter() {
     let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
