@@ -127,7 +127,7 @@ function generateHistogram(imageData) {
     chart.render();
 }
 
-function applyMedianFilter() {
+function applyMediaFilter() {
     let windowSize = parseInt(document.getElementById('windowSize').value);
     if (windowSize % 2 === 0) {
         alert("El tamaño de la ventana debe ser un número impar.");
@@ -163,18 +163,14 @@ function applyMedianFilter() {
             let greenWindow = getWindow(x, y, 1);
             let blueWindow = getWindow(x, y, 2);
 
-            redWindow.sort((a, b) => a - b);
-            greenWindow.sort((a, b) => a - b);
-            blueWindow.sort((a, b) => a - b);
-
-            let medianRed = redWindow[Math.floor(redWindow.length / 2)];
-            let medianGreen = greenWindow[Math.floor(greenWindow.length / 2)];
-            let medianBlue = blueWindow[Math.floor(blueWindow.length / 2)];
+            let meanRed = redWindow.reduce((a, b) => a + b, 0) / redWindow.length;
+            let meanGreen = greenWindow.reduce((a, b) => a + b, 0) / greenWindow.length;
+            let meanBlue = blueWindow.reduce((a, b) => a + b, 0) / blueWindow.length;
 
             let index = (y * width + x) * 4;
-            outputData[index] = medianRed;
-            outputData[index + 1] = medianGreen;
-            outputData[index + 2] = medianBlue;
+            outputData[index] = meanRed;
+            outputData[index + 1] = meanGreen;
+            outputData[index + 2] = meanBlue;
             outputData[index + 3] = 255; 
         }
     }
